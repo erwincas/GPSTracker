@@ -20,7 +20,8 @@ char waitForConnection(void){
 
     while(seconds < 10){
         EUSART_PrintLn("AT+CREG?");
-        while(EUSART_Read() != ':'); EUSART_Read(); //Skip 1 char
+        while(EUSART_Read() != ':'); 
+        EUSART_Read(); //Skip 1 char
         if(EUSART_Read() == '1' || EUSART_Read() == '5'){
             return 1;
         }
@@ -45,11 +46,24 @@ void getBatteryLevel(char * batBuf){
     int i=0;
     EUSART_PrintLn("AT+CBC");
     while(EUSART_Read() != ',');
-    while(batBuf[i-1] != ','){
+    do{
         batBuf[i] = EUSART_Read(); 
         i++;
-    }
+    } while(batBuf[i-1] != ',');
     batBuf[i-1] = '\0';
+}
+
+void readHTTPRequest(char * RXBuffer){
+    uint8_t i=0;
+    EUSART_PrintLn("AT+HTTPREAD");
+    while(EUSART_Read() != '\n'); //Skip the echo
+    while(EUSART_Read() != '\n'); //Skip the length
+    do{
+        RXBuffer[i] = EUSART_Read();
+        i++;
+    }while(RXBuffer[i-1] != '\n');
+    
+    RXBuffer[i-1] = '\0';
 }
 
 void makeHTTPRequest(char * lat, char * lon, char * battery){  
@@ -76,9 +90,7 @@ void closeGPRSConnection(void){
 
 void simSleep(void){
     EUSART_PrintLn("AT+CSCLK=2");
-    
-    //Wait until SIM800L Falls asleep
-    __delay_ms(6000);
+    waitForResponse();
 }
 
 void simWakeUp(void){
