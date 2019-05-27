@@ -16,13 +16,14 @@ extern "C" {
     
 #define BUFFER_SIZE 70
 
-void makeGPRSConnection(void);
-void makeHTTPRequest(char * lat, char * lon);
+char makeGPRSConnection(void);
+void makeHTTPRequest(char * lat, char * lon, char * battery);
 void makeTestHTTPRequest(void);
 void closeGPRSConnection(void);
 void simSleep(void);
 void simWakeUp(void);
 void getBatteryLevel(char * batBuf);
+char waitForConnection(void);
 
 #ifdef	__cplusplus
 }

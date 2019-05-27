@@ -402,7 +402,7 @@ void EUSART_ChangeToGPS(void);
 void EUSART_ChangeToSim(void);
 void EUSART_Print(char * string);
 void EUSART_PrintLn(char * string);
-void EUSART_ReadLn(char * RXBuffer);
+void EUSART_ReadLn(char * RXBuffer, uint8_t bufLen);
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 

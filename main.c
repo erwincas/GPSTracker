@@ -6,19 +6,18 @@
 void main(void)
 {
     double lat, lon;
-    char RXBuffer[BUFFER_SIZE];
+    char RXBuffer[BUFFER_SIZE], batBuf[4];
     char latArray[11], lonArray[11];
-    char batBuf[4];
     int status;
     
     // initialize the device
     SYSTEM_Initialize();
     
+    // give all the devices some time to wake up
+    __delay_ms(1000);
+    
     EUSART_ChangeToSim();
     simWakeUp();
-    //EUSART_ReadLn(RXBuffer);
-    //EUSART_PrintLn(RXBuffer);
-    
     
     EUSART_ChangeToGPS();
     GPS_WaitForLine();
@@ -30,7 +29,7 @@ void main(void)
         //Check the first 5 characters of the buffer
         if(GPS_LineIsGPGLL(RXBuffer)){
             //First check if the 7th character is not a comma as this would mean
-            //There is no data yet
+            //There is no gps data available yet
             if(RXBuffer[6] != ','){
                 //Fill the lat & lon double
                 lat = GPS_NMEAToDouble(RXBuffer, 6);
@@ -43,12 +42,18 @@ void main(void)
             }
         }
     }
-    __delay_ms(2000);
     EUSART_ChangeToSim();
     
-    makeGPRSConnection();
-    makeHTTPRequest(latArray, lonArray);
-    closeGPRSConnection();
+    getBatteryLevel(batBuf);
+    
+    // Check if a connection has been made
+    if(waitForConnection()){
+        // If so, make the GET request
+        if(makeGPRSConnection()){
+            makeHTTPRequest(latArray, lonArray, batBuf);
+        }
+        closeGPRSConnection();
+    }
     
     // puts the sim module into sleep mode
     simSleep();
