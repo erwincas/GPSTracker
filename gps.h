@@ -17,10 +17,12 @@ extern "C" {
 #define BUFFER_SIZE 70
     
 double GPS_NMEAToDouble(char * RXBuffer, char startPos);
-char GPS_LineIsGPGLL(char * RXBuffer);
-void GPS_ReadLine(char * RXBuffer);
+char GPS_GetGPGGALine(char * RXBuffer);
+void GPS_GetGPVTGLine(char * RXBuffer);
 void GPS_WaitForLine(void);
-
+void GPS_Get_Satellites(char * GPGGALine, char * satBuf); 
+void GPS_Get_Height(char * GPGGALine, char * heightBuf); 
+void GPS_Get_Velocity(char * GPGVTGLine, char * velocityBuf);
 #ifdef	__cplusplus
 }
 #endif

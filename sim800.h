@@ -17,7 +17,7 @@ extern "C" {
 #define BUFFER_SIZE 70
 
 char makeGPRSConnection(void);
-void makeHTTPRequest(char * lat, char * lon, char * battery);
+void makeHTTPRequest(char * lat, char * lon, char * battery, char * satellites, char * height);
 void makeTestHTTPRequest(void);
 void closeGPRSConnection(void);
 void simSleep(void);

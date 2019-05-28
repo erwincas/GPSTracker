@@ -66,7 +66,7 @@ void readHTTPRequest(char * RXBuffer){
     RXBuffer[i-1] = '\0';
 }
 
-void makeHTTPRequest(char * lat, char * lon, char * battery){  
+void makeHTTPRequest(char * lat, char * lon, char * battery, char * satellites, char * height){
     EUSART_PrintLn("AT+HTTPINIT");
     waitForResponse();
     EUSART_Print("AT+HTTPPARA=\"URL\",\"http://api.erwincastricum.nl/test.php?lat=");
@@ -75,6 +75,10 @@ void makeHTTPRequest(char * lat, char * lon, char * battery){
     EUSART_Print(lon);
     EUSART_Print("&bat=");
     EUSART_Print(battery);
+    EUSART_Print("&sat=");
+    EUSART_Print(satellites);
+    EUSART_Print("&height=");
+    EUSART_Print(height);
     EUSART_PrintLn("\"");
     waitForResponse();
     EUSART_PrintLn("AT+HTTPACTION=0");
@@ -97,5 +101,6 @@ void simWakeUp(void){
     EUSART_PrintLn("AT");
     __delay_ms(500);
     EUSART_PrintLn("AT+CSCLK=0");
-    __delay_ms(500);
+    waitForResponse();
+    __delay_ms(1000);
 }

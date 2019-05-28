@@ -116,7 +116,7 @@ void EUSART_ReadLn(char * RXBuffer, uint8_t bufLen){
     uint8_t i=0;
     do{
         RXBuffer[i] = EUSART_Read(); i++;
-    }while(RXBuffer[i] != '\n' && RXBuffer[i] != '\r' && i < bufLen);
+    }while(RXBuffer[i-1] != '\n' && RXBuffer[i-1] != '\0' && i < bufLen);
     RXBuffer[i-1] = '\0';
 }
 
